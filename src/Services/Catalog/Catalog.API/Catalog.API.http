@@ -1,6 +1,47 @@
-@Catalog.API_HostAddress = http://localhost:5014
+@Catalog.API_HostAddress = http://localhost:5000
 
-GET {{Catalog.API_HostAddress}}/weatherforecast/
+### Get all products
+GET {{Catalog.API_HostAddress}}/products
 Accept: application/json
+
+###
+
+### Get product by ID (replace with actual ID after creating a product)
+GET {{Catalog.API_HostAddress}}/products/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Accept: application/json
+
+###
+
+### Create a new product
+POST {{Catalog.API_HostAddress}}/products
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro",
+  "categories": ["Electronics", "Smartphones"],
+  "description": "Latest iPhone with A17 Pro chip",
+  "imageFile": "iphone15pro.jpg",
+  "price": 999.99
+}
+
+###
+
+### Update a product (replace ID with actual product ID)
+PUT {{Catalog.API_HostAddress}}/products
+Content-Type: application/json
+
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "iPhone 15 Pro Max",
+  "categories": ["Electronics", "Smartphones"],
+  "description": "Updated description for iPhone 15 Pro Max",
+  "price": 1199.99,
+  "imageUrl": "iphone15promax.jpg"
+}
+
+###
+
+### Delete a product (replace with actual product ID)
+DELETE {{Catalog.API_HostAddress}}/products/3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ###

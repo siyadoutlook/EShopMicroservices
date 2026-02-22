@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.CQRS;
 using Catalog.API.Models;
+using FluentValidation;
 using Marten;
 
 namespace Catalog.API.Products.DeleteProduct;
@@ -7,6 +8,14 @@ namespace Catalog.API.Products.DeleteProduct;
 public record DeleteProductCommand(Guid ProductId) : ICommand<DeleteProductResult>;
 
 public record DeleteProductResult(bool IsSuccess);
+
+public class DeleteProductCommandValidator:AbstractValidator<DeleteProductCommand>
+{
+    public DeleteProductCommandValidator()
+    {
+        RuleFor(x => x.ProductId).NotEmpty().WithMessage("ProductId is required");
+    }
+}
 
 public class DeleteProductHandler(IDocumentSession session, ILogger<DeleteProductHandler> logger)
     : ICommandHandler<DeleteProductCommand, DeleteProductResult>
