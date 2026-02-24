@@ -38,7 +38,7 @@ public class UpdateProductCommandHandler(IDocumentSession session, ILogger<Updat
 
         if (product == null)
         {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(request.Id);
         }
 
         request.Adapt(product);

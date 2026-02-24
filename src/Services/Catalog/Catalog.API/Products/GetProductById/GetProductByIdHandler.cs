@@ -14,14 +14,13 @@ internal class GetProductByIdHandler(IDocumentSession session, ILogger<GetProduc
 {
     public async Task<GetProductByIdResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetProductByIdHandler.Handle called by {@Query}", query);
-        var product = await session.LoadAsync<Product>(query.Id, cancellationToken);
-
-        if (product == null)
+        if (logger.IsEnabled(LogLevel.Information))
         {
-            throw new ProductNotFoundException();
+            logger.LogInformation("GetProductByIdHandler.Handle called by {@Query}", query);
         }
 
-        return new GetProductByIdResult(product);
+        var product = await session.LoadAsync<Product>(query.Id, cancellationToken);
+
+        return product == null ? throw new ProductNotFoundException(query.Id) : new GetProductByIdResult(product);
     }
 }
