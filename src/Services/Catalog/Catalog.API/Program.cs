@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
 builder.Services.AddMarten(options => { options.Connection(builder.Configuration.GetConnectionString("DefaultConnection")!); })

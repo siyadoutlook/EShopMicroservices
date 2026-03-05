@@ -13,11 +13,11 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
 
         var validationResults = await Task.WhenAll(validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
-        var failures = validationResults.Where(x => x.Errors.Any())
+        var failures = validationResults.Where(x => x.Errors.Count != 0)
             .SelectMany(x => x.Errors).ToList();
 
-        if (failures.Any()) throw new ValidationException(failures);
+        if (failures.Count != 0) throw new ValidationException(failures);
 
-        return await next();
+        return await next(cancellationToken);
     }
 }
