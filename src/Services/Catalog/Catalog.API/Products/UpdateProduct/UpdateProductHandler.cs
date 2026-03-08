@@ -27,13 +27,11 @@ public class UpdateProductCommandValidator:AbstractValidator<UpdateProductComman
     }
 }
 
-public class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger)
+public class UpdateProductCommandHandler(IDocumentSession session)
     :ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
     public async Task<UpdateProductResult> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("UpdateProductCommandHandler.Handle() is called with request {@query}", request);
-        
+    {        
         var product = await session.LoadAsync<Product>(request.Id,cancellationToken);
 
         if (product == null)

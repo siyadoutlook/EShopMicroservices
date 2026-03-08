@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
+using Catalog.API.Exceptions;
 using Catalog.API.Models;
 using FluentValidation;
 using Marten;
@@ -9,7 +10,7 @@ public record DeleteProductCommand(Guid ProductId) : ICommand<DeleteProductResul
 
 public record DeleteProductResult(bool IsSuccess);
 
-public class DeleteProductCommandValidator:AbstractValidator<DeleteProductCommand>
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
 {
     public DeleteProductCommandValidator()
     {
@@ -17,16 +18,17 @@ public class DeleteProductCommandValidator:AbstractValidator<DeleteProductComman
     }
 }
 
-public class DeleteProductHandler(IDocumentSession session, ILogger<DeleteProductHandler> logger)
+public class DeleteProductHandler(IDocumentSession session)
     : ICommandHandler<DeleteProductCommand, DeleteProductResult>
 {
     public async Task<DeleteProductResult> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("DeleteProductHandler Gets called");
+        _ = await session.LoadAsync<Product>(request.ProductId, cancellationToken) 
+            ?? throw new ProductNotFoundException(request.ProductId);
 
         session.Delete<Product>(request.ProductId);
         await session.SaveChangesAsync(cancellationToken);
 
-        return new DeleteProductResult(true); 
+        return new DeleteProductResult(true);
     }
 }
