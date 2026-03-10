@@ -1,5 +1,6 @@
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Central_Handler;
+using Catalog.API.Data;
 using FluentValidation;
 using Marten;
 
@@ -14,6 +15,12 @@ builder.Services.AddMediatR(config =>
 });
 builder.Services.AddMarten(options => { options.Connection(builder.Configuration.GetConnectionString("DefaultConnection")!); })
     .UseLightweightSessions();
+
+if(builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+}
+
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddCarter(new DependencyContextAssemblyCatalog(typeof(Program).Assembly));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
